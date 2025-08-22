@@ -32,6 +32,10 @@ logging:
 server:
   url: ${SERVER_URL}
 
+gemini:
+  api:
+    key: ${GEMINI_API_KEY}
+
 ---
 spring:
   config:
@@ -44,3 +48,4 @@ spring:
     activate:
       on-profile: prod
     import: application-prod.yml
+
