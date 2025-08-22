@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.junction.zerobyonebe.global.security.jwt.JwtAuthenticationFilter;
-import org.junction.zerobyonebe.global.security.jwt.JwtExceptionFilter;
+// import org.junction.zerobyonebe.global.security.jwt.JwtAuthenticationFilter;
+// import org.junction.zerobyonebe.global.security.jwt.JwtExceptionFilter;
 import org.junction.zerobyonebe.global.security.jwt.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,18 +40,19 @@ public class SecurityConfig {
 			.csrf(csrf -> csrf.disable())
 			.httpBasic(httpBasic -> httpBasic.disable())
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/", "/api/users/register", "/api/users/login", "/api/users/reissue",
-					"/swagger-ui/**", "/v3/api-docs/**").permitAll()
-				.requestMatchers("/admin").hasRole("ADMIN")
-				.anyRequest().authenticated()
-			)
+			// .authorizeHttpRequests(auth -> auth
+			// 	.requestMatchers("/", "/api/users/register", "/api/users/login", "/api/users/reissue",
+			// 		"/swagger-ui/**", "/v3/api-docs/**").permitAll()
+			// 	.requestMatchers("/admin").hasRole("ADMIN")
+			// 	.anyRequest().authenticated()
+			// )
+			.authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
 			.formLogin(form -> form.disable())
 			.logout(logout -> logout.permitAll())
 			.cors(configurer -> configurer.configurationSource(corsConfigurationSource()));
 
-		httpSecurity.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-			.addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
+		// httpSecurity.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+		// 	.addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
 
 		return httpSecurity.build();
 	}
