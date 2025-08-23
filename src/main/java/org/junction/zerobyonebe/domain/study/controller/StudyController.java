@@ -8,7 +8,7 @@ import org.junction.zerobyonebe.domain.study.application.StudyResultProcessServi
 import org.junction.zerobyonebe.domain.study.application.StudyValidationService;
 import org.junction.zerobyonebe.domain.study.application.TextToSpeechService;
 import org.junction.zerobyonebe.domain.study.dto.request.ChoiceRequest;
-import org.junction.zerobyonebe.domain.study.dto.request.LevelTestRequest;
+import org.junction.zerobyonebe.domain.study.dto.request.SpeakingRequest;
 import org.junction.zerobyonebe.domain.study.dto.response.ChoiceResponse;
 import org.junction.zerobyonebe.domain.study.dto.response.LevelTestResponse;
 import org.junction.zerobyonebe.domain.study.dto.response.ContentResponse;
@@ -16,7 +16,6 @@ import org.junction.zerobyonebe.domain.study.dto.response.SpeakingTestResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,8 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,29 +38,29 @@ public class StudyController {
 	private final StudyValidationService studyValidationService;
 	private final StudyResultProcessService studyResultProcessService;
 
-	@GetMapping("/content/{caseId}")
-	public ContentResponse getStudyContent(@PathVariable Integer caseId) {
-		return studyProblemService.getCaseContent(caseId);
-	}
+	// @GetMapping("/content/{caseId}")
+	// public ContentResponse getStudyContent(@PathVariable Integer caseId) {
+	// 	return studyProblemService.getCaseContent(caseId);
+	// }
 
 	//sst
-	@PostMapping(value = "/speech-to-text", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public String handleAudioMessage(
-		@RequestParam("audioFile") MultipartFile audioFile
-	) throws IOException {
-		String transcribe = sttService.transcribe(audioFile);
-		String s = "변환에 성공하였습니다.\n" + transcribe;
-		return s;
-	}
+	// @PostMapping(value = "/speech-to-text", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	// public String handleAudioMessage(
+	// 	@RequestParam("audioFile") MultipartFile audioFile
+	// ) throws IOException {
+	// 	String transcribe = sttService.transcribe(audioFile);
+	// 	String s = "변환에 성공하였습니다.\n" + transcribe;
+	// 	return s;
+	// }
 
 	//tts
-	@GetMapping("/convert-to-speech")
-	public ResponseEntity<byte[]> convertTextToSpeech(@RequestParam String text) throws Exception {
-		byte[] audio = ttsService.convertTextToSpeech(text);
-		return ResponseEntity.ok()
-			.header("Content-Type", "audio/mpeg")
-			.body(audio);
-	}
+	// @GetMapping("/convert-to-speech")
+	// public ResponseEntity<byte[]> convertTextToSpeech(@RequestParam String text) throws Exception {
+	// 	byte[] audio = ttsService.convertTextToSpeech(text);
+	// 	return ResponseEntity.ok()
+	// 		.header("Content-Type", "audio/mpeg")
+	// 		.body(audio);
+	// }
 
 	//leveltest
 	@GetMapping("/levelTest/{caseId}")
@@ -71,12 +68,20 @@ public class StudyController {
 		return studyProblemService.levelTest(caseId);
 	}
 
+	// @PostMapping(value = "/levelTest/validation", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	// public LevelTestResponse levelTestValidation(
+	// 	@RequestPart("questions") String questions,
+	// 	@RequestPart("audio") MultipartFile audio
+	// ) throws IOException {
+	// 	return studyValidationService.levelTestValidation(questions, audio);
+	// }
+
 	@PostMapping(value = "/levelTest/validation", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public LevelTestResponse levelTestValidation(
-		@RequestPart("questions") LevelTestRequest levelTestRequest,
+		@RequestPart("questions") SpeakingRequest speakingRequest,
 		@RequestPart("audio") MultipartFile audio
 	) throws IOException {
-		return studyResultProcessService.levelTestValidation(levelTestRequest, audio);
+		return studyResultProcessService.levelTestValidation(speakingRequest, audio);
 	}
 
 	//TODO: demo
@@ -104,19 +109,18 @@ public class StudyController {
 		return studyProblemService.speakingTest(caseId);
 	}
 
+	// @PostMapping(value = "/problem/speaking/validation", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	// public String speakingValidation(
+	// 	@RequestPart("questions") String questions,
+	// 	@RequestPart("audio") MultipartFile audio) throws IOException {
+	// 	return studyValidationService.speakingValidation(questions, audio);
+	// }
+
 	@PostMapping(value = "/problem/speaking/validation", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public String speakingValidation(
-		@RequestPart("questions") String questions,
+	public SpeakingTestResponse speakingValidation(
+		@RequestPart SpeakingRequest speakingRequest,
 		@RequestPart("audio") MultipartFile audio) throws IOException {
-		return studyValidationService.speakingValidation(questions, audio);
+		return studyResultProcessService.speakingValidation(speakingRequest, audio);
 	}
-
-
-
-
-
-
-
-
 
 }

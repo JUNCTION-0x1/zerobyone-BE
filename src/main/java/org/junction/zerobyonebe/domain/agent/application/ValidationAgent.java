@@ -39,18 +39,20 @@ public class ValidationAgent {
 			
 		   \s
 			채점 기준:
-			- 사용자의 의도를 고려해서 두 문장이 80% 이상 의미와 문법적으로 일치하면 "정답"
+			- 사용자의 의도를 고려해서 두 문장이 80%% 이상 의미와 문법적으로 일치하면 "정답"
 			- 아니라면 "오답"
 		   \s
 		   출력 조건:
-			- 이 형식으로 출력해줘.
-			- 코드블록(```json`)이나 마크다운, 추가 설명은 절대 쓰지 말 것.
+			- 코드블록(```json`)사용하지 않고
+			- 마크 다운 사용하지 않고
+			- 추가 설명은 쓰지 않고
+			- 이 형식으로만 출력해줘.
 			{
 				"isCorrect": true/false,
 				"questionKor": questionKor,
 				"answerEng": answerEng,
 				"userAnswer: userAnswer,
-				"correctAnswerCommentary": "정답 또는 오답에 대한 2~3줄의 자세한 피드백"
+				"answerCommentary": "오답인 이유를 간단한 1줄 정도 피드백하고, 정답에 대해 왜 이게 정답인지 사용하는 중요한 단어의 이유는 뭔지 2~4줄로 설명해줘."
 			}
 			 
 			주어진 문장: %s
@@ -79,4 +81,6 @@ public class ValidationAgent {
 
 		return SpeakingTestResponse.builder().build();
 	}
+
+
 }
