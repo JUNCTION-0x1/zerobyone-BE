@@ -25,6 +25,11 @@ spring:
   jwt:
     secret: ${JWT_SECRET_KEY}
 
+  cloud:
+    gcp:
+      credentials:
+        location: classpath:stt.json
+
 logging:
   level:
     org.hibernate.sql: debug
@@ -35,6 +40,8 @@ server:
 gemini:
   api:
     key: ${GEMINI_API_KEY}
+
+
 
 ---
 spring:

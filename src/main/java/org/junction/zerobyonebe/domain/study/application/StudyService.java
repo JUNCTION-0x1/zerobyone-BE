@@ -1,5 +1,6 @@
 package org.junction.zerobyonebe.domain.study.application;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -8,7 +9,11 @@ import org.junction.zerobyonebe.domain.study.domain.Word;
 import org.junction.zerobyonebe.domain.study.dto.response.ContentResponse;
 import org.junction.zerobyonebe.domain.study.dto.response.WordResponse;
 import org.junction.zerobyonebe.domain.study.infrastructure.repository.ContentRepository;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
