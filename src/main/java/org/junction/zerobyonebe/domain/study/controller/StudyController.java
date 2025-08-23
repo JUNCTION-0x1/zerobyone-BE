@@ -3,18 +3,27 @@ package org.junction.zerobyonebe.domain.study.controller;// package org.junction
 import java.io.IOException;
 
 import org.junction.zerobyonebe.domain.study.application.SpeechToTextService;
-import org.junction.zerobyonebe.domain.study.application.StudyService;
+import org.junction.zerobyonebe.domain.study.application.StudyProblemService;
+import org.junction.zerobyonebe.domain.study.application.StudyValidationService;
 import org.junction.zerobyonebe.domain.study.application.TextToSpeechService;
+import org.junction.zerobyonebe.domain.study.dto.request.ChoiceRequest;
+import org.junction.zerobyonebe.domain.study.dto.response.ChoiceResponse;
+import org.junction.zerobyonebe.domain.study.dto.response.LevelTestResponse;
 import org.junction.zerobyonebe.domain.study.dto.response.ContentResponse;
+import org.junction.zerobyonebe.domain.study.dto.response.SpeakingTestResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,13 +32,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class StudyController {
 
-	private final StudyService studyService;
+	private final StudyProblemService studyProblemService;
 	private final SpeechToTextService sttService;
 	private final TextToSpeechService ttsService;
+	private final StudyValidationService studyValidationService;
 
 	@GetMapping("/content/{caseId}")
 	public ContentResponse getStudyContent(@PathVariable Integer caseId) {
-		return studyService.getCaseContent(caseId);
+		return studyProblemService.getCaseContent(caseId);
 	}
 
 	//sst
@@ -50,5 +60,60 @@ public class StudyController {
 			.header("Content-Type", "audio/mpeg")
 			.body(audio);
 	}
+
+	//leveltest
+	@GetMapping("/levelTest/{caseId}")
+	public String levelTest(@PathVariable Long caseId) {
+		return studyProblemService.levelTest(caseId);
+	}
+
+	@PostMapping(value = "/levelTest/validation", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public LevelTestResponse levelTestValidation(
+		@RequestPart("questions") String questions,
+		@RequestPart("audio") MultipartFile audio
+	) throws IOException {
+		return studyValidationService.levelTestValidation(questions, audio);
+	}
+
+	//TODO: demo
+	@GetMapping("/problem/choice/{caseId}")
+	public ChoiceResponse getChoiceProblem(@PathVariable Long caseId) throws IOException {
+		return studyProblemService.choiceTest(caseId);
+	}
+
+	@GetMapping("/problem/choice/{caseId}/voice")
+	public ResponseEntity<byte[]> getChoiceVoice(@RequestParam Long caseId) throws Exception {
+		byte[] audio = studyProblemService.choiceVoice(caseId);
+		return ResponseEntity.ok()
+			.header("Content-Type", "audio/mpeg")
+			.body(audio);
+	}
+
+	@PostMapping(value = "/problem/choice/validation/{answer}")
+	public SpeakingTestResponse choiceValidation(
+		@PathVariable String answer,
+		@ModelAttribute ChoiceRequest choiceRequest) throws JsonProcessingException {
+		return studyValidationService.choiceValidation(choiceRequest, answer);
+	}
+
+	@GetMapping("/problem/speaking/{caseId}")
+	public String getSpeakingProblem(@PathVariable Long caseId) throws IOException {
+		return studyProblemService.speakingTest(caseId);
+	}
+
+	@PostMapping(value = "/problem/speaking/validation", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public String speakingValidation(
+		@RequestPart("questions") String questions,
+		@RequestPart("audio") MultipartFile audio) throws IOException {
+		return studyValidationService.speakingValidation(questions, audio);
+	}
+
+
+
+
+
+
+
+
 
 }
