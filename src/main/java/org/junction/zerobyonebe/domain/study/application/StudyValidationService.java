@@ -73,17 +73,14 @@ public class StudyValidationService {
 		return answer;
 	}
 
-	public SpeakingTestResponse choiceValidation(ChoiceRequest choiceRequest, String answer) throws
-		JsonProcessingException {
+	public SpeakingTestResponse choiceValidation(ChoiceRequest choiceRequest) {
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		JsonNode rootNode = objectMapper.readTree(choiceRequest.getContents());
+		String correctAnswer = choiceRequest.getAnswerEng();
+		String userAnswer = choiceRequest.getAnswer();
 
-		String correctAnswer = rootNode.get("answerEng").asText();
+		boolean isCorrect = false;
+		if(correctAnswer.equals(userAnswer)) { isCorrect = true;}
 
-		String userAnswer = answer;
-
-		boolean isCorrect = correctAnswer.trim().equalsIgnoreCase(userAnswer.trim());
 		String prompt = String.format("""
 		너는 영어 학습용 채점 및 해설 생성기야.
 		아래 학습자의 답과 정답을 보고, 간단한 영어 학습용 해설을 만들어줘.

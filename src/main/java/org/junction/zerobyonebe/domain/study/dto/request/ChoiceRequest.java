@@ -6,5 +6,6 @@ import lombok.Getter;
 
 @Getter
 public class ChoiceRequest {
-	private String contents;
+	private String answerEng;
+	private String answer;
 }

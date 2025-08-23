@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -89,11 +90,10 @@ public class StudyController {
 			.body(audio);
 	}
 
-	@PostMapping(value = "/problem/choice/validation/{answer}")
+	@PostMapping(value = "/problem/choice/validation")
 	public SpeakingTestResponse choiceValidation(
-		@PathVariable String answer,
-		@ModelAttribute ChoiceRequest choiceRequest) throws JsonProcessingException {
-		return studyValidationService.choiceValidation(choiceRequest, answer);
+		@RequestBody ChoiceRequest choiceRequest) {
+		return studyValidationService.choiceValidation(choiceRequest);
 	}
 
 	@GetMapping("/problem/speaking/{caseId}")

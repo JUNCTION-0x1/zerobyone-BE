@@ -28,11 +28,12 @@ spring:
   cloud:
     gcp:
       credentials:
-        location: classpath:stt.json
+        location: file:./stt.json
 
 logging:
   level:
     org.hibernate.sql: debug
+
 
 server:
   url: ${SERVER_URL}
@@ -40,8 +41,6 @@ server:
 gemini:
   api:
     key: ${GEMINI_API_KEY}
-
-
 
 ---
 spring:
