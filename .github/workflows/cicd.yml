@@ -75,6 +75,15 @@ jobs:
           echo "${{ secrets.PROPERTIES_PROD}}" > ./application-prod.yml
         shell: bash
 
+      # create stt,json
+      - name: make stt.json
+
+        run: |
+          cd ./src/main/resources
+          touch ./stt.json
+          echo "${{ secrets.STT_JSON}}" > ./stt.json
+        shell: bash
+
       # gradle build
 
       - name: Grant execute permission for gradlew
