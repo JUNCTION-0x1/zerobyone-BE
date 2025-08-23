@@ -20,10 +20,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class StudyValidationService {
 
-	private final ContentRepository contentRepository;
 	private final GeminiApiClient geminiApiClient;
 	private final SpeechToTextService sttService;
-	private final TextToSpeechService tstService;
 
 	//TODO: demo용
 	public LevelTestResponse levelTestValidation(String questions, MultipartFile audio) throws IOException {
@@ -91,10 +89,11 @@ public class StudyValidationService {
 		String commentary = geminiApiClient.askGemini(prompt);
 
 		return SpeakingTestResponse.builder()
-			.correct(isCorrect)
-			.wrongAnswer(isCorrect ? null : userAnswer)
-			.correctAnswer(correctAnswer)
-			.correctAnswerCommentary(commentary)
+			.isCorrect(isCorrect)
+			.questionKor("")
+			.answerEng(correctAnswer)
+			.userAnswer(userAnswer)
+			.answerCommentary(commentary)
 			.build();
 
 	}

@@ -5,11 +5,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
 @Builder
 public class SpeakingTestResponse {
-	private Boolean correct;
-	private String wrongAnswer;
-	private String correctAnswer;
-	private String correctAnswerCommentary;
+	private Boolean isCorrect;
+	private String questionKor;
+	private String answerEng;
+	private String userAnswer;
+	private String answerCommentary;
 }

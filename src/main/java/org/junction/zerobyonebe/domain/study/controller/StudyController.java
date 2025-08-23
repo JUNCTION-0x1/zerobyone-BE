@@ -4,9 +4,11 @@ import java.io.IOException;
 
 import org.junction.zerobyonebe.domain.study.application.SpeechToTextService;
 import org.junction.zerobyonebe.domain.study.application.StudyProblemService;
+import org.junction.zerobyonebe.domain.study.application.StudyResultProcessService;
 import org.junction.zerobyonebe.domain.study.application.StudyValidationService;
 import org.junction.zerobyonebe.domain.study.application.TextToSpeechService;
 import org.junction.zerobyonebe.domain.study.dto.request.ChoiceRequest;
+import org.junction.zerobyonebe.domain.study.dto.request.LevelTestRequest;
 import org.junction.zerobyonebe.domain.study.dto.response.ChoiceResponse;
 import org.junction.zerobyonebe.domain.study.dto.response.LevelTestResponse;
 import org.junction.zerobyonebe.domain.study.dto.response.ContentResponse;
@@ -37,6 +39,7 @@ public class StudyController {
 	private final SpeechToTextService sttService;
 	private final TextToSpeechService ttsService;
 	private final StudyValidationService studyValidationService;
+	private final StudyResultProcessService studyResultProcessService;
 
 	@GetMapping("/content/{caseId}")
 	public ContentResponse getStudyContent(@PathVariable Integer caseId) {
@@ -70,10 +73,10 @@ public class StudyController {
 
 	@PostMapping(value = "/levelTest/validation", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public LevelTestResponse levelTestValidation(
-		@RequestPart("questions") String questions,
+		@RequestPart("questions") LevelTestRequest levelTestRequest,
 		@RequestPart("audio") MultipartFile audio
 	) throws IOException {
-		return studyValidationService.levelTestValidation(questions, audio);
+		return studyResultProcessService.levelTestValidation(levelTestRequest, audio);
 	}
 
 	//TODO: demo
