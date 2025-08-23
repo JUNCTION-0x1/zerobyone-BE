@@ -11,8 +11,7 @@ import org.junction.zerobyonebe.domain.study.dto.request.ChoiceRequest;
 import org.junction.zerobyonebe.domain.study.dto.request.SpeakingRequest;
 import org.junction.zerobyonebe.domain.study.dto.response.ChoiceResponse;
 import org.junction.zerobyonebe.domain.study.dto.response.LevelTestResponse;
-import org.junction.zerobyonebe.domain.study.dto.response.ContentResponse;
-import org.junction.zerobyonebe.domain.study.dto.response.SpeakingTestResponse;
+import org.junction.zerobyonebe.domain.study.dto.response.SpeakingResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,14 +43,14 @@ public class StudyController {
 	// }
 
 	//sst
-	// @PostMapping(value = "/speech-to-text", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	// public String handleAudioMessage(
-	// 	@RequestParam("audioFile") MultipartFile audioFile
-	// ) throws IOException {
-	// 	String transcribe = sttService.transcribe(audioFile);
-	// 	String s = "변환에 성공하였습니다.\n" + transcribe;
-	// 	return s;
-	// }
+	@PostMapping(value = "/speech-to-text", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public String handleAudioMessage(
+		@RequestParam("audioFile") MultipartFile audioFile
+	) throws IOException {
+		String transcribe = sttService.transcribe(audioFile);
+		String s = "변환에 성공하였습니다.\n" + transcribe;
+		return s;
+	}
 
 	//tts
 	// @GetMapping("/convert-to-speech")
@@ -99,7 +98,7 @@ public class StudyController {
 	}
 
 	@PostMapping(value = "/problem/choice/validation")
-	public SpeakingTestResponse choiceValidation(
+	public SpeakingResponse choiceValidation(
 		@RequestBody ChoiceRequest choiceRequest) {
 		return studyValidationService.choiceValidation(choiceRequest);
 	}
@@ -117,7 +116,7 @@ public class StudyController {
 	// }
 
 	@PostMapping(value = "/problem/speaking/validation", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public SpeakingTestResponse speakingValidation(
+	public SpeakingResponse speakingValidation(
 		@RequestPart SpeakingRequest speakingRequest,
 		@RequestPart("audio") MultipartFile audio) throws IOException {
 		return studyResultProcessService.speakingValidation(speakingRequest, audio);

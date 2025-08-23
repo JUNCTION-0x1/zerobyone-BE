@@ -1,12 +1,12 @@
 package org.junction.zerobyonebe.domain.agent.application;
 
-import org.junction.zerobyonebe.domain.study.application.SpeechToTextService;
-import org.junction.zerobyonebe.domain.study.dto.response.LevelTestResponse;
-import org.junction.zerobyonebe.domain.study.dto.response.SpeakingTestResponse;
+import java.util.List;
+
+import org.junction.zerobyonebe.domain.study.dto.response.ChoiceResponse;
+import org.junction.zerobyonebe.domain.study.dto.response.SpeakingResponse;
 import org.junction.zerobyonebe.domain.study.infrastructure.external.GeminiApiClient;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 
@@ -31,7 +31,7 @@ public class ValidationAgent {
 	 * @param intent 사용자의 발화 의도
 	 * @return 주어진 정보를 기반으로 정답, 레벨 도출
 	 */
-	public SpeakingTestResponse speakingValidation(String questionKor, String answerEng, String userVoiceText, String intent) {
+	public SpeakingResponse speakingValidation(String questionKor, String answerEng, String userVoiceText, String intent) {
 		String prompt = String.format("""
 			너는 영어 문장 채점기이다.
 			아래에 주어진 한국어 문장에 대해 학습자가 영어로 말한 답과 의도 그리고 정답이 주어진다. 
@@ -68,7 +68,7 @@ public class ValidationAgent {
 			try {
 				String json = geminiApiClient.askGemini(prompt);
 
-				SpeakingTestResponse response = objectMapper.readValue(json, SpeakingTestResponse.class);
+				SpeakingResponse response = objectMapper.readValue(json, SpeakingResponse.class);
 				return response;
 
 			} catch (MismatchedInputException e) {
@@ -79,8 +79,7 @@ public class ValidationAgent {
 			}
 		}
 
-		return SpeakingTestResponse.builder().build();
+		return SpeakingResponse.builder().build();
 	}
-
 
 }

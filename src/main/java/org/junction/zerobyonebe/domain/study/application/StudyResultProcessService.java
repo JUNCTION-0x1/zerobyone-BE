@@ -4,9 +4,11 @@ import java.io.IOException;
 
 import org.junction.zerobyonebe.domain.agent.application.IntentExtractionAgent;
 import org.junction.zerobyonebe.domain.agent.application.ValidationAgent;
+import org.junction.zerobyonebe.domain.study.dto.request.ChoiceRequest;
 import org.junction.zerobyonebe.domain.study.dto.request.SpeakingRequest;
+import org.junction.zerobyonebe.domain.study.dto.response.ChoiceResponse;
 import org.junction.zerobyonebe.domain.study.dto.response.LevelTestResponse;
-import org.junction.zerobyonebe.domain.study.dto.response.SpeakingTestResponse;
+import org.junction.zerobyonebe.domain.study.dto.response.SpeakingResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,16 +34,16 @@ public class StudyResultProcessService {
 		String intent = intentExtractionAgent.extractIntent(userVoiceText, questionKor);
 
 		//2. 정답 검증
-		SpeakingTestResponse speakingTestResponse = validationAgent.speakingValidation(
+		SpeakingResponse speakingResponse = validationAgent.speakingValidation(
 			speakingRequest.getQuestionKor(), speakingRequest.getAnswerEng(), userVoiceText, intent);
 		
 		//3. 레벨에 맞는 값 반환
-		if(!speakingTestResponse.getIsCorrect()) return LevelTestResponse.builder().level(1).name("오렌지 농장").build();
+		if(!speakingResponse.getIsCorrect()) return LevelTestResponse.builder().level(1).name("오렌지 농장").build();
 		else return LevelTestResponse.builder().level(3).name("카페").build();
 	}
 
 	// Speaking 학습 정답 검증 워크플로우
-	public SpeakingTestResponse speakingValidation(SpeakingRequest speakingRequest, MultipartFile audio) throws
+	public SpeakingResponse speakingValidation(SpeakingRequest speakingRequest, MultipartFile audio) throws
 		IOException {
 		String questionKor = speakingRequest.getQuestionKor();
 		String answerEng = speakingRequest.getAnswerEng();
@@ -55,5 +57,14 @@ public class StudyResultProcessService {
 			speakingRequest.getQuestionKor(), speakingRequest.getAnswerEng(), userVoiceText, intent
 		);
 	}
+
+	// // 객관식 학습 정답 검증 워크플로우
+	// public ChoiceResponse choiceValidation(ChoiceRequest choiceRequest) throws IOException {
+	//
+	// 	// 정답 검증하여 반환
+	// 	return validationAgent.choiceValidation(
+	//
+	// 	);
+	// }
 
 }

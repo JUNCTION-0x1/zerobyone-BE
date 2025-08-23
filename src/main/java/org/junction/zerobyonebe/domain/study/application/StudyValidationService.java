@@ -4,13 +4,11 @@ import java.io.IOException;
 
 import org.junction.zerobyonebe.domain.study.dto.request.ChoiceRequest;
 import org.junction.zerobyonebe.domain.study.dto.response.LevelTestResponse;
-import org.junction.zerobyonebe.domain.study.dto.response.SpeakingTestResponse;
+import org.junction.zerobyonebe.domain.study.dto.response.SpeakingResponse;
 import org.junction.zerobyonebe.domain.study.infrastructure.external.GeminiApiClient;
-import org.junction.zerobyonebe.domain.study.infrastructure.repository.ContentRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -71,7 +69,7 @@ public class StudyValidationService {
 		return answer;
 	}
 
-	public SpeakingTestResponse choiceValidation(ChoiceRequest choiceRequest) {
+	public SpeakingResponse choiceValidation(ChoiceRequest choiceRequest) {
 
 		String correctAnswer = choiceRequest.getAnswerEng();
 		String userAnswer = choiceRequest.getAnswer();
@@ -88,7 +86,7 @@ public class StudyValidationService {
 		""", userAnswer, correctAnswer);
 		String commentary = geminiApiClient.askGemini(prompt);
 
-		return SpeakingTestResponse.builder()
+		return SpeakingResponse.builder()
 			.isCorrect(isCorrect)
 			.questionKor("")
 			.answerEng(correctAnswer)

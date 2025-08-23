@@ -38,8 +38,8 @@ public class SpeechToTextService {
 		// 설정 객체 생성
 		RecognitionConfig recognitionConfig =
 			RecognitionConfig.newBuilder()
-				.setEncoding(RecognitionConfig.AudioEncoding.FLAC) //파일은 FLAC 형식
-				.setSampleRateHertz(48000) //아이폰 48000, 안드로이드 44100
+				.setEncoding(RecognitionConfig.AudioEncoding.WEBM_OPUS) //파일은 FLAC 형식
+				.setSampleRateHertz(48000)
 				.setLanguageCode("en-US") //영어 en-US, 한국어 ko-KR
 				.build();
 
